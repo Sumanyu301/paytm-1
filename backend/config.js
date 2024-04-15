@@ -1,0 +1,1 @@
+export const JWT_SECRET = "PAYTM_PROJECT_REVISION";
