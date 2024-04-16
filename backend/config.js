@@ -1,1 +1,4 @@
-export const JWT_SECRET = "PAYTM_PROJECT_REVISION";
+//backend/config.js
+module.exports = {
+  JWT_SECRET: "your-jwt-secret",
+};
