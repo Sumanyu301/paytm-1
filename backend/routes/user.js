@@ -1,7 +1,7 @@
 const express = require("express");
 const { z } = require("zod");
 const { User } = require("../database/db");
-const JWT_SECRET = require("backend/config.js");
+const JWT_SECRET = require("../config");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware");
 
@@ -17,10 +17,10 @@ const signInSchema = z.object({
   password: z.string(),
 });
 
-const updateBody = zod.object({
-  password: zod.string().optional(),
-  firstName: zod.string().optional(),
-  lastName: zod.string().optional(),
+const updateBody = z.object({
+  password: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
 });
 
 const userRouter = express.Router();
@@ -28,29 +28,47 @@ const userRouter = express.Router();
 // SIGNUP Route-------------------------------------
 
 userRouter.post("/signup", async (req, res) => {
-  const body = req.body;
-  const { success } = signupSchema.safeParse(req.body);
+  const { success } = signupBody.safeParse(req.body);
   if (!success) {
-    return res.status(400).json({
-      message: "Email already taken / Incorrect inputs",
-    });
-  }
-  const user = await User.findOne({
-    username: body.username,
-  });
-  if (user._id) {
-    return res.status(400).json({
+    return res.status(411).json({
       message: "Email already taken / Incorrect inputs",
     });
   }
 
-  const newUser = await User.create(body);
-  const token = jwt.sgn(
+  const existingUser = await User.findOne({
+    username: req.body.username,
+  });
+
+  if (existingUser) {
+    return res.status(411).json({
+      message: "Email already taken/Incorrect inputs",
+    });
+  }
+
+  const user = await User.create({
+    username: req.body.username,
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+  });
+  const userId = user._id;
+
+  /// ----- Create new account ------
+
+  await Account.create({
+    userId,
+    balance: 1 + Math.random() * 10000,
+  });
+
+  /// -----  ------
+
+  const token = jwt.sign(
     {
-      userId: newUser._id,
+      userId,
     },
     JWT_SECRET
   );
+
   res.json({
     message: "User created successfully",
     token: token,
