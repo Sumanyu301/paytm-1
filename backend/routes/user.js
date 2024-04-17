@@ -4,7 +4,6 @@ const { User, Account } = require("../database/db");
 const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware");
-console.log(JWT_SECRET);
 const signupSchema = z.object({
   username: z.string().email(),
   password: z.string(),
