@@ -1,10 +1,10 @@
 const express = require("express");
 const { z } = require("zod");
-const { User } = require("../database/db");
-const JWT_SECRET = require("../config");
+const { User, Account } = require("../database/db");
+const { JWT_SECRET } = require("../config");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middleware");
-
+console.log(JWT_SECRET);
 const signupSchema = z.object({
   username: z.string().email(),
   password: z.string(),
@@ -28,7 +28,7 @@ const userRouter = express.Router();
 // SIGNUP Route-------------------------------------
 
 userRouter.post("/signup", async (req, res) => {
-  const { success } = signupBody.safeParse(req.body);
+  const { success } = signupSchema.safeParse(req.body);
   if (!success) {
     return res.status(411).json({
       message: "Email already taken / Incorrect inputs",
