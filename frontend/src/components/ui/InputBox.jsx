@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputBox = ({ label, placeholder }) => {
+const InputBox = ({ label, placeholder,onPress }) => {
   return (
     <div>
       <div>
@@ -13,6 +13,7 @@ const InputBox = ({ label, placeholder }) => {
         </label>
 
         <input
+          onChange={onPress}
           type="email"
           id="UserEmail"
           placeholder={placeholder}
