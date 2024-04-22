@@ -1,12 +1,12 @@
 import { useState } from "react";
 import ButtonUi from "./ButtonUi";
 
-export const Users = () => {
+export default function Users() {
   // Replace with backend call
   const [users, setUsers] = useState([
     {
-      firstName: "Harkirat",
-      lastName: "Singh",
+      firstName: "Sumanyu",
+      lastName: "Sharma",
       _id: 1,
     },
   ]);
