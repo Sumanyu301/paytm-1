@@ -4,7 +4,13 @@ import Header from "./ui/Header";
 import SubHeading from "./ui/SubHeading";
 import InputBox from "./ui/InputBox";
 import Bottom from "./ui/Bottom";
+import { useState } from "react";
+import axios from "axios";
 const Signup = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="p-10 bg-white rounded">
@@ -14,13 +20,49 @@ const Signup = () => {
         <SubHeading
           label={"Enter your information to create an account"}
         ></SubHeading>
-
-        <InputBox label={"First Name"} placeholder={"John"}></InputBox>
-        <InputBox label={"Last Name"} placeholder={"Doe"}></InputBox>
-        <InputBox label={"Email"} placeholder={"john@example.com"}></InputBox>
-        <InputBox label={"Password"}></InputBox>
+        <InputBox
+          label={"First Name"}
+          placeholder={"John"}
+          onPress={(e) => {
+            setFirstName(e.target.value);
+          }}
+        ></InputBox>
+        <InputBox
+          label={"Last Name"}
+          placeholder={"Doe"}
+          onPress={(e) => {
+            setLastName(e.target.value);
+          }}
+        ></InputBox>
+        <InputBox
+          label={"Email"}
+          placeholder={"john@example.com"}
+          onPress={(e) => {
+            setUserName(e.target.value);
+          }}
+        ></InputBox>
+        <InputBox
+          label={"Password"}
+          onPress={(e) => {
+            setPassword(e.target.value);
+          }}
+        ></InputBox>
         <div className=" flex justify-center mt-2">
-          <ButtonUi label={"Sign Up"}></ButtonUi>
+          <ButtonUi
+            label={"Sign Up"}
+            onPress={async () => {
+              const response = await axios.post(
+                "http://localhost:3000/api/v1/user/signup",
+                {
+                  username,
+                  firstName,
+                  lastName,
+                  password,
+                }
+              );
+              localStorage.setItem("token", response.data.token);
+            }}
+          ></ButtonUi>
         </div>
         <Bottom
           label={"Already have an account?"}

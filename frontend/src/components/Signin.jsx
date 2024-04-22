@@ -5,10 +5,9 @@ import SubHeading from "./ui/SubHeading";
 import InputBox from "./ui/InputBox";
 import Bottom from "./ui/Bottom";
 import axios from "axios";
+
 const Signin = () => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");  
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   return (
@@ -20,10 +19,29 @@ const Signin = () => {
         <SubHeading
           label={"Enter your credentials to access your account"}
         ></SubHeading>
-        <InputBox label={"Email"} placeholder={"john@example.com"}></InputBox>
-        <InputBox label={"Password"}></InputBox>
+        <InputBox
+          label={"Email"}
+          placeholder={"john@example.com"}
+          onPress={(e) => setUsername(e.target.value)}
+        ></InputBox>
+        <InputBox
+          label={"Password"}
+          onPress={(e) => setPassword(e.target.value)}
+        ></InputBox>
         <div className=" flex justify-center mt-2">
-          <ButtonUi label={"Sign In"}></ButtonUi>
+          <ButtonUi
+            label={"Sign In"}
+            onPress={async () => {
+              const response = await axios.post(
+                "http://localhost:3000/api/v1/user/signin",
+                {
+                  username,
+                  password,
+                }
+              );
+              localStorage.setItem("token", response.data.token);
+            }}
+          ></ButtonUi>
         </div>
         <Bottom
           label={"Don't have an account?"}

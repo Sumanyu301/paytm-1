@@ -1,6 +1,6 @@
 import React from "react";
 
-const InputBox = ({ label, placeholder,onPress }) => {
+const InputBox = ({ label, placeholder, onPress }) => {
   return (
     <div>
       <div>
