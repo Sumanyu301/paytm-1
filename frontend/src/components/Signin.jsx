@@ -5,10 +5,12 @@ import SubHeading from "./ui/SubHeading";
 import InputBox from "./ui/InputBox";
 import Bottom from "./ui/Bottom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
@@ -40,6 +42,7 @@ const Signin = () => {
                 }
               );
               localStorage.setItem("token", response.data.token);
+              navigate("/dashboard");
             }}
           ></ButtonUi>
         </div>

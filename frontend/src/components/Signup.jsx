@@ -6,11 +6,13 @@ import InputBox from "./ui/InputBox";
 import Bottom from "./ui/Bottom";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
   return (
     <div className="flex items-center justify-center h-screen bg-gray-200">
       <div className="p-10 bg-white rounded">
@@ -61,6 +63,7 @@ const Signup = () => {
                 }
               );
               localStorage.setItem("token", response.data.token);
+              navigate("/dashboard");
             }}
           ></ButtonUi>
         </div>

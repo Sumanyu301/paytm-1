@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonUi from "./ButtonUi";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function Users() {
-  // Replace with backend call
-  const [users, setUsers] = useState([
-    {
-      firstName: "Sumanyu",
-      lastName: "Sharma",
-      _id: 1,
-    },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState("");
+  
+  // Debouncing implementation
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      const fetchUsers = async () => {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/user/bulk?filter=" + filter
+        );
+        setUsers(response.data.user);
+      };
+      fetchUsers();
+    }, 200); // Adjust debounce delay as needed
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [filter]);
 
   return (
     <>
@@ -19,18 +30,22 @@ export default function Users() {
           type="text"
           placeholder="Search users..."
           className="w-full px-2 py-1 border rounded border-slate-200"
+          onChange={(e) => {
+            setFilter(e.target.value);
+          }}
         ></input>
       </div>
       <div>
         {users.map((user) => (
-          <User user={user} />
+          <User key={user._id} user={user} />
         ))}
       </div>
     </>
   );
-};
+}
 
 function User({ user }) {
+  const navigate = useNavigate();
   return (
     <div className="flex justify-between">
       <div className="flex">
@@ -39,15 +54,20 @@ function User({ user }) {
             {user.firstName[0]}
           </div>
         </div>
-        <div className="flex flex-col justify-center h-ful">
+        <div className="flex flex-col justify-center h-full">
           <div>
             {user.firstName} {user.lastName}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col justify-center h-ful">
-        <ButtonUi label={"Send Money"} />
+      <div className="flex flex-col justify-center h-full">
+        <ButtonUi
+          onPress={(e) => {
+            navigate("/send?id=" + user._id + "&name=" + user.firstName);
+          }}
+          label={"Send Money"}
+        />
       </div>
     </div>
   );
